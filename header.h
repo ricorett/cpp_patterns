@@ -74,7 +74,7 @@ void AddStudent(pqxx::connection& conn, const std::string& name, const std::stri
         std::string insert_query = "INSERT INTO students (name, phone) VALUES (" + txn.quote(name) + ", " + txn.quote(phone) + ");";
         txn.exec(insert_query);
         txn.commit();
-        std::cout << "Студент " << name << " добавлен успешно." << std::endl;
+//        std::cout << "Студент " << name << " добавлен успешно." << std::endl;
     }
     catch (const std::exception &e) {
         std::cerr << "Ошибка при добавлении студента: " << e.what() << std::endl;
@@ -115,7 +115,7 @@ void ExecuteSelectQuery(pqxx::connection& conn, const std::string& query) {
             std::cout << std::endl;
         }
         // DEBUG
-        std::cout << "Отладка: результат запроса - " << res.size() << " строк." << std::endl;
+//        std::cout << "Отладка: результат запроса - " << res.size() << " строк." << std::endl;
         txn.commit();
     }
     catch (const std::exception &e) {
