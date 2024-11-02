@@ -8,9 +8,9 @@ add_executable(sqlBuilderExe main.cpp)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PQXX REQUIRED libpqxx)
 
-target_include_directories(sql_query_builder PRIVATE ${PQXX_INCLUDE_DIRS})
-target_link_directories(sql_query_builder PRIVATE ${PQXX_LIBRARY_DIRS})
-target_link_libraries(sql_query_builder PRIVATE ${PQXX_LIBRARIES})
+target_include_directories(sqlBuilderExe PRIVATE ${PQXX_INCLUDE_DIRS})
+target_link_directories(sqlBuilderExe PRIVATE ${PQXX_LIBRARY_DIRS})
+target_link_libraries(sqlBuilderExe PRIVATE ${PQXX_LIBRARIES})
 
 
-target_compile_options(sql_query_builder PRIVATE ${PQXX_CFLAGS_OTHER})
+target_compile_options(sqlBuilderExe PRIVATE ${PQXX_CFLAGS_OTHER})

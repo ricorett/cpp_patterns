@@ -8,24 +8,18 @@ int main() {
         if (conn.is_open()) {
             std::cout << "Подключение к базе данных успешно!" << std::endl;
 
-
             CreateTestTable(conn);
-
 
             SqlSelectQueryBuilder query_builder;
             query_builder.AddColumn("name").AddColumn("phone");
             query_builder.AddFrom("students");
-            query_builder.AddWhere("id", "42").AddWhere("name", "John");
-
+            query_builder.AddWhere("id","42").AddWhere("name","John");
 
             std::string query = query_builder.BuildQuery();
             std::cout << "Сформированный запрос: " << query << std::endl;
 
-
             ExecuteSelectQuery(conn, query);
 
-
-            conn.disconnect();
         } else {
             std::cerr << "Не удалось подключиться к базе данных." << std::endl;
         }

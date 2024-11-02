@@ -1,11 +1,10 @@
 #pragma once
-#include <pqxx/pqxx>  // Подключение библиотеки pqxx
+#include <pqxx/pqxx>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <iostream>
 
-// Класс для построения SELECT-запросов
 class SqlSelectQueryBuilder {
 public:
 
@@ -20,12 +19,10 @@ public:
         return *this;
     }
 
-
     SqlSelectQueryBuilder& AddWhere(const std::string& column, const std::string& value) {
-        where_clauses.push_back(column + "=" + value);
+        where_clauses.push_back(column + "='" + value + "'");
         return *this;
     }
-
 
     std::string BuildQuery() const {
         std::ostringstream query;
@@ -57,9 +54,7 @@ public:
             }
         }
 
-
         query << ";";
-
         return query.str();
     }
 
@@ -72,10 +67,8 @@ private:
 
 void CreateTestTable(pqxx::connection& conn) {
     try {
-        // Открываем транзакцию
         pqxx::work txn(conn);
 
-        // SQL-запрос для создания таблицы
         std::string create_table_query = R"(
             CREATE TABLE IF NOT EXISTS students (
                 id SERIAL PRIMARY KEY,
@@ -84,12 +77,8 @@ void CreateTestTable(pqxx::connection& conn) {
             );
         )";
 
-        // Выполняем запрос
         txn.exec(create_table_query);
-
-        // Фиксируем транзакцию
         txn.commit();
-
         std::cout << "Таблица 'students' создана успешно." << std::endl;
     }
     catch (const std::exception &e) {
@@ -100,13 +89,8 @@ void CreateTestTable(pqxx::connection& conn) {
 
 void ExecuteSelectQuery(pqxx::connection& conn, const std::string& query) {
     try {
-        // Открываем транзакцию
         pqxx::work txn(conn);
-
-        // Выполняем SELECT-запрос
         pqxx::result res = txn.exec(query);
-
-        // Выводим результаты запроса
         std::cout << "Результаты запроса:" << std::endl;
         for (const auto& row : res) {
             for (const auto& field : row) {
