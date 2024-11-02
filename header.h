@@ -8,8 +8,10 @@
 class SqlSelectQueryBuilder {
 public:
 
-    SqlSelectQueryBuilder& AddColumn(const std::string& column) {
-        columns.push_back(column);
+    SqlSelectQueryBuilder& AddColumns(const std::vector<std::string>& columnsToAdd) noexcept {
+        for (const auto& column : columnsToAdd) {
+            columns.push_back(column);
+        }
         return *this;
     }
 
@@ -19,8 +21,10 @@ public:
         return *this;
     }
 
-    SqlSelectQueryBuilder& AddWhere(const std::string& column, const std::string& value) {
-        where_clauses.push_back(column + "='" + value + "'");
+    SqlSelectQueryBuilder& AddWhere(const std::map<std::string, std::string>& kv) noexcept {
+        for (const auto& pair : kv) {
+            where_clauses.push_back(pair.first + "='" + pair.second + "'");
+        }
         return *this;
     }
 
@@ -64,6 +68,18 @@ private:
     std::vector<std::string> where_clauses;
 };
 
+void AddStudent(pqxx::connection& conn, const std::string& name, const std::string& phone) {
+    try {
+        pqxx::work txn(conn);
+        std::string insert_query = "INSERT INTO students (name, phone) VALUES (" + txn.quote(name) + ", " + txn.quote(phone) + ");";
+        txn.exec(insert_query);
+        txn.commit();
+        std::cout << "Студент " << name << " добавлен успешно." << std::endl;
+    }
+    catch (const std::exception &e) {
+        std::cerr << "Ошибка при добавлении студента: " << e.what() << std::endl;
+    }
+}
 
 void CreateTestTable(pqxx::connection& conn) {
     try {
@@ -98,7 +114,8 @@ void ExecuteSelectQuery(pqxx::connection& conn, const std::string& query) {
             }
             std::cout << std::endl;
         }
-
+        // DEBUG
+        std::cout << "Отладка: результат запроса - " << res.size() << " строк." << std::endl;
         txn.commit();
     }
     catch (const std::exception &e) {
